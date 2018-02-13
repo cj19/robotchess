@@ -105,35 +105,34 @@ public class Game {
             case "A":
                 createAttackAction(playerNumber);
                 break;
+            case "D":
+                createDefendAction(playerNumber);
+                break;
         }
     }
 
+    private void createDefendAction(int playerNumber) {
+        String direction = ReaderUtil.readInDirections(directions);
+        Action defend = new Action();
+        defend.setDefend(direction);
+        players[playerNumber-1].defend(defend);
+    }
+
     private void createAttackAction(int playerNumber) {
-        String direction = readInAttack();
+        String direction = ReaderUtil.readInDirections(directions);
         Action attack = new Action();
         attack.setAttack(direction);
         players[playerNumber-1].attack(attack);
     }
 
-    private String readInAttack() {
-        return ReaderUtil.readInAttackDirections(directions);
-    }
-
-//    private void validateAttacking(int playerNumber) {
-//        if (pla)
-//    }
 
     private void createMoveAction(int playerNumber) {
-        int[] movement = readInMovement();
+        int[] movement = ReaderUtil.readCoordinates(board.getHeight(), board.getWidth(),
+                board.getPlayerOnePosition(), board.getPlayerTwoPosition());
         Action move = new Action();
         move.setMove(movement);
         players[playerNumber - 1].move(move);
 
-    }
-
-    private int[] readInMovement() {
-        return ReaderUtil.readCoordinates(board.getHeight(), board.getWidth(),
-                board.getPlayerOnePosition(), board.getPlayerTwoPosition());
     }
 
     private String chooseAction() {

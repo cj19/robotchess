@@ -10,4 +10,6 @@ public interface IRobotBehaviour {
     void move(Action action);
 
     void attack(Action action);
+
+    void defend(Action action);
 }

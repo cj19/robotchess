@@ -38,4 +38,9 @@ public class Action {
         this.attack = new Attack();
         this.attack.setDirection(Direction.valueOf(direction));
     }
+
+    public void setDefend(String direction) {
+        this.defend = new Defend();
+        this.defend.setDirection(Direction.valueOf(direction));
+    }
 }

@@ -87,7 +87,7 @@ public class ReaderUtil {
         return new int[]{x, y};
     }
 
-    public static String readInAttackDirections(List<String> directions) {
+    public static String readInDirections(List<String> directions) {
         System.out.println("Choose a direction to attack!");
         System.out.println("(N, W, E, S)");
         String direction;

@@ -101,8 +101,14 @@ public abstract class Robot implements IRobotBehaviour {
     }
 
     @Override
-    public void attack(Action attack) {
-        setAttackingDirection(attack.getAttack().getDirection());
+    public void attack(Action action) {
+        setAttackingDirection(action.getAttack().getDirection());
         setDefendingDirection(null);
+    }
+
+    @Override
+    public void defend(Action action) {
+        setDefendingDirection(action.getDefend().getDirection());
+        setAttackingDirection(null);
     }
 }
