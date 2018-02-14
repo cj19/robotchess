@@ -129,11 +129,21 @@ public class Game {
     }
 
     private boolean isNotOppositeDirection(int i, int j) {
-        if ((players[i].getAttackingDirection().equals(Direction.N) && !players[j].getDefendingDirection().equals(Direction.S)) ||
-                (players[i].getAttackingDirection().equals(Direction.S) && !players[j].getDefendingDirection().equals(Direction.N))) {
-            return true;
-        } else return (players[i].getAttackingDirection().equals(Direction.E) && !players[j].getDefendingDirection().equals(Direction.W)) ||
-                (players[i].getDefendingDirection().equals(Direction.W) && !players[j].getDefendingDirection().equals(Direction.E));
+        return isNorthSouthDirection(i, j) || (isEastWestDirection(i, j));
+    }
+
+
+    private boolean isNorthSouthDirection(int i, int j) {
+        return (players[i].getAttackingDirection().equals(Direction.N) && !players[j].getDefendingDirection().equals(Direction.S) &&
+                players[i].getPosition()[1] > players[j].getPosition()[1]) || (players[i].getAttackingDirection().equals(Direction.S) &&
+                !players[j].getDefendingDirection().equals(Direction.N) && players[i].getPosition()[1] < players[j].getPosition()[1]);
+    }
+
+    private boolean isEastWestDirection(int i, int j) {
+        return (players[i].getAttackingDirection().equals(Direction.E) && !players[j].getDefendingDirection().equals(Direction.W) &&
+                players[i].getPosition()[0] < players[j].getPosition()[0]) ||
+                (players[i].getDefendingDirection().equals(Direction.W) && !players[j].getDefendingDirection().equals(Direction.E) &&
+                        players[i].getPosition()[0] > players[j].getPosition()[0]);
     }
 
     private void resetPlayersState() {
@@ -144,7 +154,7 @@ public class Game {
     }
 
     private boolean checkPlayersArmor() {
-        return players[0].getArmor() == 0 || players[1].getArmor() == 0;
+        return players[0].getArmor() > 0 || players[1].getArmor() > 0;
     }
 
     private void skipTurn(int playerNumber) {
@@ -263,22 +273,22 @@ public class Game {
 
     private int[] setPlayerOnePositionAndName(double width, double height) {
         int[] playerOnePosition = new int[2];
-        playerOnePosition[0] = 1;
-        playerOnePosition[1] = (int) Math.ceil(width / 2.0);
+        playerOnePosition[1] = 1;
+        playerOnePosition[0] = (int) Math.ceil(width / 2.0);
         players[0].setPosition(playerOnePosition[0], playerOnePosition[1]);
         players[0].setArenaSize((int) height, (int) width);
-        players[0].setEnemyPosition((int) height, (int) Math.ceil(width / 2.0));
+        players[0].setEnemyPosition((int) Math.ceil(width / 2.0), (int) height);
         players[0].setClassName(createClassName(players[0].getClass().getName()));
         return playerOnePosition;
     }
 
     private int[] setPlayerTwoPositionAndName(double width, double height) {
         int[] playerTwoPosition = new int[2];
-        playerTwoPosition[0] = (int) height;
-        playerTwoPosition[1] = (int) Math.ceil(width / 2.0);
+        playerTwoPosition[1] = (int) height;
+        playerTwoPosition[0] = (int) Math.ceil(width / 2.0);
         players[1].setPosition(playerTwoPosition[0], playerTwoPosition[1]);
         players[1].setArenaSize((int) height, (int) width);
-        players[1].setEnemyPosition(1, (int) Math.ceil(width / 2.0));
+        players[1].setEnemyPosition((int) Math.ceil(width / 2.0), 1);
         players[1].setClassName(createClassName(players[1].getClass().getName()));
         return playerTwoPosition;
     }

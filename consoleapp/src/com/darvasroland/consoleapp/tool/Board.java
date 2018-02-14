@@ -45,9 +45,9 @@ public final class Board {
     }
 
     private void printCharacters(int row, int column) {
-        if (row == playerOnePosition[0] && column == playerOnePosition[1]) {
+        if (row == playerOnePosition[1] && column == playerOnePosition[0]) {
             System.out.print("A" + "\t");
-        } else if (row == playerTwoPosition[0] && column == playerTwoPosition[1]) {
+        } else if (row == playerTwoPosition[1] && column == playerTwoPosition[0]) {
             System.out.print("B" + "\t");
         } else {
             System.out.print("." + "\t");

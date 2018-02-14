@@ -11,7 +11,7 @@ public abstract class Robot implements IRobotBehaviour {
 
     private int[] position = new int[2];
     private int[] enemyPosition = new int[2];
-    private int[] arenaSize=new int[2];
+    private int[] arenaSize = new int[2];
     private int armor;
     private int enemyArmor;
     private Direction defendingDirection;
@@ -19,10 +19,10 @@ public abstract class Robot implements IRobotBehaviour {
     private String className;
 
     public Robot(int armor, int enemyArmor) {
-        this.armor=armor;
-        this.enemyArmor=enemyArmor;
-        this.attackingDirection=Direction.X;
-        this.defendingDirection=Direction.X;
+        this.armor = armor;
+        this.enemyArmor = enemyArmor;
+        this.attackingDirection = Direction.X;
+        this.defendingDirection = Direction.X;
     }
 
     public String getPositionInString() {
@@ -38,7 +38,7 @@ public abstract class Robot implements IRobotBehaviour {
     }
 
     public String getArmorInString() {
-        return "Armor: 10/" + armor;
+        return "Armor: " + armor + "/10";
     }
 
     public int getArmor() {
@@ -46,7 +46,7 @@ public abstract class Robot implements IRobotBehaviour {
     }
 
     public String getEnemyArmorInString() {
-        return "Enemy Armor: 10/" + enemyArmor;
+        return "Enemy Armor: "+enemyArmor+"/10";
     }
 
     public int[] getPosition() {
@@ -74,7 +74,7 @@ public abstract class Robot implements IRobotBehaviour {
     }
 
     public void setPosition(int a, int b) {
-        this.position[0]= a;
+        this.position[0] = a;
         this.position[1] = b;
     }
 
@@ -102,7 +102,7 @@ public abstract class Robot implements IRobotBehaviour {
 
     @Override
     public void move(Action action) {
-        setPosition(action.getMove().getX(),action.getMove().getY());
+        setPosition(action.getMove().getX(), action.getMove().getY());
     }
 
     @Override
@@ -119,6 +119,6 @@ public abstract class Robot implements IRobotBehaviour {
 
     @Override
     public void skip(int playerNumber) {
-        System.out.println("\n"+playerNumber+". player skipping the turn!\n" );
+        System.out.println("\n" + playerNumber + ". player skipping the turn!\n");
     }
 }
