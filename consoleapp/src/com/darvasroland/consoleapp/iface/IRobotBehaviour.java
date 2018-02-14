@@ -12,4 +12,6 @@ public interface IRobotBehaviour {
     void attack(Action action);
 
     void defend(Action action);
+
+    void skip(int playerNumber);
 }

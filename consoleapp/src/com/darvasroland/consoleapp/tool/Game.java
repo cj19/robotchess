@@ -1,23 +1,21 @@
 package com.darvasroland.consoleapp.tool;
 
-import com.darvasroland.consoleapp.abtract.Robot;
-import com.darvasroland.consoleapp.dao.BoardInit;
-import com.darvasroland.consoleapp.dao.action.Action;
-import com.darvasroland.consoleapp.util.FileClassLoader;
-
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+import com.darvasroland.consoleapp.abtract.Robot;
+import com.darvasroland.consoleapp.dao.BoardInit;
+import com.darvasroland.consoleapp.dao.action.Action;
+import com.darvasroland.consoleapp.dao.action.Direction;
+import com.darvasroland.consoleapp.util.FileClassLoader;
+
 public class Game {
 
-    /**
-     * todo: use universal location
-     */
-    private final String defaultLocation =
-            "F:\\Workspace\\consoleapp\\consoleapp\\src\\com\\darvasroland\\consoleapp\\player\\";
+    private final File defaultLocation = Paths.get("./src/com/darvasroland/consoleapp/player").toFile();
 
     private int rounds;
 
@@ -62,9 +60,11 @@ public class Game {
             listPlayersAndBoardState();
             firstPlayerRound();
             secondPlayerRound();
+            calculateAttackAndDefense();
             updateBoard();
+            resetPlayersState();
             i++;
-        } while (i <= rounds);
+        } while (i <= rounds && checkPlayersArmor());
     }
 
     private void firstPlayerRound() {
@@ -72,7 +72,6 @@ public class Game {
         System.out.println(players[0].getClassName());
         takeTurn(1);
     }
-
 
     private void secondPlayerRound() {
         System.out.println("\n'B' robot's round!");
@@ -86,43 +85,84 @@ public class Game {
         String action = chooseAction();
         switch (action) {
             case "OP":
-                players[playerNumber - 1].getPositionInString();
+                System.out.println(players[playerNumber - 1].getPositionInString());
                 break;
             case "EP":
-                players[playerNumber - 1].getEnemyPositionInString();
+                System.out.println(players[playerNumber - 1].getEnemyPositionInString());
                 break;
             case "AS":
-                players[playerNumber - 1].getArenaSizeInString();
+                System.out.println(players[playerNumber - 1].getArenaSizeInString());
                 break;
             case "OA":
-                players[playerNumber - 1].getArmorInString();
+                System.out.println(players[playerNumber - 1].getArmorInString());
                 break;
             case "EA":
-                players[playerNumber - 1].getEnemyArmorInString();
+                System.out.println(players[playerNumber - 1].getEnemyArmorInString());
                 break;
             case "M":
                 createMoveAction(playerNumber);
+                break;
             case "A":
                 createAttackAction(playerNumber);
                 break;
             case "D":
                 createDefendAction(playerNumber);
                 break;
+            case "S":
+                skipTurn(playerNumber);
+                break;
         }
+    }
+
+    private void calculateAttackAndDefense() {
+        System.out.println("Calculating defense and attack moves...");
+        if (players[0].getAttackingDirection() != Direction.X) {
+            if (isNotOppositeDirection(0, 1)) {
+                players[1].setArmor(players[1].getArmor() - 1);
+            }
+        }
+        if (players[1].getAttackingDirection() != Direction.X) {
+            if (isNotOppositeDirection(1, 0)) {
+                players[0].setArmor(players[0].getArmor() - 1);
+            }
+        }
+    }
+
+    private boolean isNotOppositeDirection(int i, int j) {
+        if ((players[i].getAttackingDirection().equals(Direction.N) && !players[j].getDefendingDirection().equals(Direction.S)) ||
+                (players[i].getAttackingDirection().equals(Direction.S) && !players[j].getDefendingDirection().equals(Direction.N))) {
+            return true;
+        } else return (players[i].getAttackingDirection().equals(Direction.E) && !players[j].getDefendingDirection().equals(Direction.W)) ||
+                (players[i].getDefendingDirection().equals(Direction.W) && !players[j].getDefendingDirection().equals(Direction.E));
+    }
+
+    private void resetPlayersState() {
+        players[0].setAttackingDirection(Direction.X);
+        players[0].setDefendingDirection(Direction.X);
+        players[1].setAttackingDirection(Direction.X);
+        players[1].setDefendingDirection(Direction.X);
+    }
+
+    private boolean checkPlayersArmor() {
+        return players[0].getArmor() == 0 || players[1].getArmor() == 0;
+    }
+
+    private void skipTurn(int playerNumber) {
+        players[playerNumber - 1].skip(playerNumber);
     }
 
     private void createDefendAction(int playerNumber) {
         String direction = ReaderUtil.readInDirections(directions);
         Action defend = new Action();
         defend.setDefend(direction);
-        players[playerNumber-1].defend(defend);
+        players[playerNumber - 1].defend(defend);
     }
 
     private void createAttackAction(int playerNumber) {
         String direction = ReaderUtil.readInDirections(directions);
         Action attack = new Action();
         attack.setAttack(direction);
-        players[playerNumber-1].attack(attack);
+        players[playerNumber - 1].attack(attack);
     }
 
 
@@ -146,7 +186,7 @@ public class Game {
         System.out.println("Check The Size of Arena: 'AS'");
         System.out.println("Check Own Armor: OA");
         System.out.println("Check Enemy Armor: 'EA'");
-        System.out.println("Also, you can Move('M'), Attack('A'), Defend('D'), and Skip Turn(S)");
+        System.out.println("Also, you can Move('M'), Attack('A'), Defend('D') and Skip Turn(S)");
     }
 
     private void setRound() {
@@ -200,7 +240,8 @@ public class Game {
         if (classLocation.equals("0")) {
             defineLocation(defaultLocation);
         } else {
-            defineLocation(classLocation);
+            File desiredPath = new File(classLocation);
+            defineLocation(desiredPath);
         }
     }
 
@@ -242,9 +283,8 @@ public class Game {
         return playerTwoPosition;
     }
 
-    private void defineLocation(String location) {
-        File folderDefaultLocation = new File(location);
-        fileClassLoader = new FileClassLoader.FileClassLoaderBuilder().setClassLoaderAndFile(folderDefaultLocation).loadClassesFromDirectory().loadClasses().build();
+    private void defineLocation(File defaultLocation) {
+        fileClassLoader = new FileClassLoader.FileClassLoaderBuilder().setClassLoaderAndFile(defaultLocation).loadClassesFromDirectory().loadClasses().build();
         fileClassLoader.listAvailableClasses();
     }
 

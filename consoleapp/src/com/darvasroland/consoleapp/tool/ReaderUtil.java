@@ -64,8 +64,8 @@ public class ReaderUtil {
         System.out.println("We're going to load classes from a folder!");
         System.out.println("Specify the relative location of the folder!(press '0' " +
                 "to use default location)");
-        String classLocation = scanner.next();
-        return classLocation;
+        String desiredLocation = scanner.next();
+        return desiredLocation;
     }
 
     public static double readInBoardParameter() {

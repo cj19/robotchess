@@ -1,7 +1,6 @@
 package com.darvasroland.consoleapp.abtract;
 
 import com.darvasroland.consoleapp.dao.action.Action;
-import com.darvasroland.consoleapp.dao.action.Attack;
 import com.darvasroland.consoleapp.dao.action.Direction;
 import com.darvasroland.consoleapp.iface.IRobotBehaviour;
 
@@ -22,22 +21,28 @@ public abstract class Robot implements IRobotBehaviour {
     public Robot(int armor, int enemyArmor) {
         this.armor=armor;
         this.enemyArmor=enemyArmor;
+        this.attackingDirection=Direction.X;
+        this.defendingDirection=Direction.X;
     }
 
     public String getPositionInString() {
-        return className + "'s position: " + position[0] + " " + position[1];
+        return className + "'s position: " + position[0] + "," + position[1];
     }
 
     public String getEnemyPositionInString() {
-        return className + "'s enemy's position: " + enemyPosition[0] + " " + enemyPosition[1];
+        return className + "'s enemy's position: " + enemyPosition[0] + "," + enemyPosition[1];
     }
 
     public String getArenaSizeInString() {
-        return "Arena size: " + arenaSize[0] + " " + arenaSize[1];
+        return "Arena size: " + arenaSize[0] + "," + arenaSize[1];
     }
 
     public String getArmorInString() {
         return "Armor: 10/" + armor;
+    }
+
+    public int getArmor() {
+        return armor;
     }
 
     public String getEnemyArmorInString() {
@@ -103,12 +108,17 @@ public abstract class Robot implements IRobotBehaviour {
     @Override
     public void attack(Action action) {
         setAttackingDirection(action.getAttack().getDirection());
-        setDefendingDirection(null);
+        setDefendingDirection(Direction.X);
     }
 
     @Override
     public void defend(Action action) {
         setDefendingDirection(action.getDefend().getDirection());
-        setAttackingDirection(null);
+        setAttackingDirection(Direction.X);
+    }
+
+    @Override
+    public void skip(int playerNumber) {
+        System.out.println("\n"+playerNumber+". player skipping the turn!\n" );
     }
 }
