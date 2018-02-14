@@ -65,7 +65,9 @@ public class Game {
             resetPlayersState();
             i++;
         } while (i <= rounds && checkPlayersArmor());
+        endGameResolution();
     }
+
 
     private void firstPlayerRound() {
         System.out.println("\n'A' robot's round!");
@@ -111,6 +113,19 @@ public class Game {
             case "S":
                 skipTurn(playerNumber);
                 break;
+        }
+    }
+
+
+    private void endGameResolution() {
+        System.out.println("\nThe Game has ended!\n");
+        System.out.println("Results: ");
+        if (players[0].getArmor() > players[1].getArmor()) {
+            System.out.println("Player One is the winner!");
+        } else if (players[0].getArmor() < players[1].getArmor()) {
+            System.out.println("Player Two is the winner!");
+        } else {
+            System.out.println("It's a tie!");
         }
     }
 
